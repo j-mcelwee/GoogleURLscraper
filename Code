@@ -1,0 +1,23 @@
+from googlesearch import search
+
+import pandas as pd
+import time
+import random
+
+#open the file that has a list of querys 
+with open('querylist.csv', 'r') as q:
+    for line in q:
+        #You can change the query to have advanced search operators here is a good guide to them. https://ahrefs.com/blog/google-advanced-search-operators/
+        # I like the - operator at the moment to remove keywords that I don't want 
+        query = f"Lorem {line} ipsum dolor sit amet -dont -hesitate -toget" \
+                f" -creative -with -your -searches 
+        url_list = []
+        print(f"Scraping google results for {line}")
+        wt = random.randint(30, 60)
+        #Main things to change if you want more results is stop (last result it retrieves) and num(results per page).
+        for j in search(query, tld='com', lang='en', tbs='0', safe='off', num=5, start=0, stop=5, pause=wt):
+            url_list.append(j)
+            df = pd.DataFrame(url_list, columns=['URL'])
+            df['City'] = line
+            df.to_csv(r'Googlequeryresults.csv', index=False, mode='a')
+            time.sleep(random.randint(5, 15))
